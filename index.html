@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Derek Jepsen — Actor · Writer · Producer</title>
+  <meta name="description" content="Derek Jepsen. Actor, writer, and producer based in Charlotte, NC. Building a body of work across performance, story, and production." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;1,300;1,400&family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --cream:    #f0e9df;
+      --paper:    #e8dfd1;
+      --linen:    #d9cdb8;
+      --ink:      #1a1714;
+      --ink-soft: #3d362e;
+      --muted:    #7a6f60;
+      --flame:    #d4603a;
+      --gold:     #c8a05a;
+      --ocean:    #3a8fa3;
+
+      --display:  'Bebas Neue', Impact, sans-serif;
+      --serif:    'Cormorant Garamond', Georgia, serif;
+      --sans:     'Inter Tight', -apple-system, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Subtle paper grain */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.35;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.06 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      padding: 2rem 3rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .mark {
+      font-family: var(--display);
+      font-size: 1.05rem;
+      letter-spacing: 0.32em;
+      color: var(--ink);
+    }
+    .mark .dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      background: var(--flame);
+      border-radius: 50%;
+      margin: 0 0.45em 0.15em;
+      vertical-align: middle;
+    }
+    .where {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── HERO BLOCK ─── */
+    .hero {
+      padding: 4rem 3rem 2rem;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease-out 0.2s forwards;
+    }
+    .eyebrow::before {
+      content: '';
+      width: 36px;
+      height: 1px;
+      background: var(--ink);
+      display: block;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-text { min-width: 0; }
+
+    .name {
+      font-family: var(--display);
+      font-size: clamp(4rem, 11vw, 9rem);
+      line-height: 0.88;
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+      opacity: 0;
+      animation: fadeUp 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s forwards;
+    }
+    .name .last {
+      color: var(--flame);
+      display: inline-block;
+    }
+
+    .roles {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1.3rem, 2.6vw, 2rem);
+      color: var(--ink-soft);
+      margin-bottom: 2.4rem;
+      opacity: 0;
+      animation: fadeUp 1s ease-out 0.55s forwards;
+    }
+    .roles .sep {
+      display: inline-block;
+      margin: 0 0.5em;
+      color: var(--flame);
+      font-style: normal;
+      font-family: var(--sans);
+      font-weight: 300;
+      transform: translateY(-0.08em);
+    }
+
+    .bio {
+      max-width: 540px;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--ink-soft);
+      opacity: 0;
+      animation: fadeUp 0.9s ease-out 0.75s forwards;
+    }
+    .bio p + p { margin-top: 1rem; }
+    .bio em {
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    /* ─── PORTRAIT ─── */
+    .portrait-wrap {
+      position: relative;
+      opacity: 0;
+      animation: fadeUp 1s ease-out 0.5s forwards;
+    }
+    .portrait-frame {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 30px 60px -30px rgba(26, 23, 20, 0.35);
+    }
+    .portrait {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.02) saturate(0.98);
+    }
+    .portrait-tag {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      padding: 0.5rem 0.9rem 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .portrait-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--flame);
+      border-radius: 50%;
+    }
+
+    /* ─── REEL SECTION ─── */
+    .reel {
+      padding: 5rem 3rem 4rem;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .reel-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+    }
+    .reel-title {
+      font-family: var(--display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 0.01em;
+      color: var(--ink);
+      display: flex;
+      align-items: baseline;
+      gap: 0.6em;
+    }
+    .reel-title em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 0.85em;
+      color: var(--flame);
+      letter-spacing: 0;
+    }
+    .reel-meta {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .reel-frame {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      background: var(--ink);
+      box-shadow: 0 40px 80px -40px rgba(26, 23, 20, 0.45);
+      overflow: hidden;
+    }
+    .reel-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* ─── CONTACT BLOCK ─── */
+    .contact-section {
+      padding: 2rem 3rem 4rem;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.4rem 3rem;
+      align-items: flex-end;
+      padding-top: 2.4rem;
+      border-top: 1px solid rgba(26, 23, 20, 0.18);
+    }
+    .contact-group .label {
+      font-family: var(--sans);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.55rem;
+      display: block;
+    }
+    .contact-group a {
+      font-family: var(--display);
+      font-size: 1.4rem;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      text-decoration: none;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 2px;
+      transition: color 0.25s;
+    }
+    .contact-group a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--flame);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .contact-group a:hover { color: var(--flame); }
+    .contact-group a:hover::after { transform: scaleX(1); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(26, 23, 20, 0.1);
+      margin-top: auto;
+    }
+    .ft-text {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .ft-text em {
+      font-family: var(--serif);
+      font-style: italic;
+      letter-spacing: 0.04em;
+      color: var(--ink-soft);
+      text-transform: none;
+    }
+    .ft-stripe {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .ft-stripe span {
+      width: 18px;
+      height: 6px;
+      display: block;
+    }
+    .ft-stripe .a { background: var(--flame); }
+    .ft-stripe .b { background: var(--gold); }
+    .ft-stripe .c { background: var(--ocean); }
+
+    /* ─── DECORATIVE EDGE MARK ─── */
+    .edge-mark {
+      position: fixed;
+      right: 1.4rem;
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+      transform-origin: right center;
+      font-family: var(--sans);
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--muted);
+      z-index: 3;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* ─── ANIMATION ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .portrait-wrap {
+        max-width: 420px;
+        margin: 0 auto;
+      }
+      .edge-mark { display: none; }
+    }
+
+    @media (max-width: 720px) {
+      header { padding: 1.5rem 1.5rem 0; }
+      .hero { padding: 2.5rem 1.5rem 2rem; }
+      .reel { padding: 3rem 1.5rem 2.5rem; }
+      .contact-section { padding: 1.5rem 1.5rem 3rem; }
+      footer { padding: 1.5rem; }
+      .roles .sep { margin: 0 0.35em; }
+      .contact { gap: 1.6rem 2rem; }
+      .contact-group a { font-size: 1.2rem; }
+      .reel-title { font-size: 2rem; }
+    }
+
+    @media (max-width: 480px) {
+      .eyebrow { font-size: 0.65rem; gap: 0.7rem; margin-bottom: 1.6rem; }
+      .eyebrow::before { width: 24px; }
+      .roles { margin-bottom: 1.8rem; }
+      .bio { font-size: 0.96rem; }
+      .contact { padding-top: 1.8rem; }
+    }
+
+    /* ─── REDUCED MOTION ─── */
+    @media (prefers-reduced-motion: reduce) {
+      .eyebrow, .name, .roles, .bio, .portrait-wrap {
+        opacity: 1;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="edge-mark">MMXXVI · Charlotte NC</div>
+
+  <div class="page">
+
+    <header>
+      <div class="mark">DJ<span class="dot"></span>STUDIO</div>
+      <div class="where">Charlotte, North Carolina</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">A new chapter, in progress</div>
+
+      <div class="hero-grid">
+        <div class="hero-text">
+          <h1 class="name">Derek<br /><span class="last">Jepsen</span></h1>
+
+          <div class="roles">
+            Actor <span class="sep">·</span> Writer <span class="sep">·</span> Producer
+          </div>
+
+          <div class="bio">
+            <p>
+              Trained at <em>The Theatre School at DePaul</em>, working across film, theatre, and original projects. Building a body of work that bridges performance, story, and production from a home base in the Carolinas.
+            </p>
+            <p>
+              The full site is on its way. Until then, the door is open.
+            </p>
+          </div>
+        </div>
+
+        <div class="portrait-wrap">
+          <div class="portrait-frame">
+            <img class="portrait" src="assets/derek-portrait.jpg" alt="Portrait of Derek Jepsen" />
+            <div class="portrait-tag">Charlotte · 2026</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reel">
+      <div class="reel-header">
+        <h2 class="reel-title">Acting <em>Reel</em></h2>
+        <div class="reel-meta">2024</div>
+      </div>
+      <div class="reel-frame">
+        <iframe
+          src="https://player.vimeo.com/video/922645975?h=6827701899&title=0&byline=0&portrait=0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          title="Derek Jepsen | Acting Reel | 2024">
+        </iframe>
+      </div>
+    </section>
+
+    <section class="contact-section">
+      <div class="contact">
+        <div class="contact-group">
+          <span class="label">Reach out</span>
+          <a href="mailto:hello@derekjepsen.com">hello@derekjepsen.com</a>
+        </div>
+        <div class="contact-group">
+          <span class="label">Elsewhere</span>
+          <a href="https://www.facebook.com/derek.jepsen" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="ft-text">© 2026 Derek Jepsen <em>· all rights reserved</em></div>
+      <div class="ft-stripe" aria-hidden="true">
+        <span class="a"></span>
+        <span class="b"></span>
+        <span class="c"></span>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
